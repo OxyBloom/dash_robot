@@ -65,7 +65,7 @@ def generate_launch_description():
 
     declare_map_yaml_cmd = DeclareLaunchArgument(
         'map',
-        default_value=os.path.join(dash_nav2_dir, 'maps', 'hmap.yaml'),
+        default_value=os.path.join(dash_nav2_dir, 'maps', 'turtlebot_arena.yaml'),
         description='Full path to map yaml file to load')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
