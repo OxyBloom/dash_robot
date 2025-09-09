@@ -1,0 +1,615 @@
+<?xml version="1.0" ?>
+<robot name="dash" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="inertial_sphere" params="mass radius *origin">
+      <inertial>
+          <xacro:insert_block name="origin"/>
+          <mass value="${mass}" />
+          <inertia ixx="${(2/5) * mass * (radius*radius)}" ixy="0.0" ixz="0.0"
+                  iyy="${(2/5) * mass * (radius*radius)}" iyz="0.0"
+                  izz="${(2/5) * mass * (radius*radius)}" />
+      </inertial>
+  </xacro:macro>  
+
+  <xacro:macro name="inertial_box" params="mass x y z *origin">
+      <inertial>
+          <xacro:insert_block name="origin"/>
+          <mass value="${mass}" />
+          <inertia ixx="${(1/12) * mass * (y*y+z*z)}" ixy="0.0" ixz="0.0"
+                  iyy="${(1/12) * mass * (x*x+z*z)}" iyz="0.0"
+                  izz="${(1/12) * mass * (x*x+y*y)}" />
+      </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="inertial_cylinder" params="mass length radius *origin">
+      <inertial>
+          <xacro:insert_block name="origin"/>
+          <mass value="${mass}" />
+          <inertia ixx="${(1/12) * mass * (3*radius*radius + length*length)}" ixy="0.0" ixz="0.0"
+                  iyy="${(1/12) * mass * (3*radius*radius + length*length)}" iyz="0.0"
+                  izz="${(1/2) * mass * (radius*radius)}" />
+      </inertial>
+  </xacro:macro>
+
+<xacro:include filename="$(find dash_description)/urdf/materials.xacro" />
+<!-- <xacro:include filename="$(find dash_description)/urdf/dash.trans" /> -->
+<xacro:include filename="$(find dash_description)/urdf/dash.gazebo" />
+
+<xacro:arg name="use_ros2_control" default="false"/>
+<xacro:arg name="sim_mode" default="true"/>
+
+<xacro:if value="$(arg use_ros2_control)">
+  <xacro:include filename="$(find dash_description)/urdf/ros2_control.xacro" />
+</xacro:if>
+<xacro:unless value="$(arg use_ros2_control)">
+  <xacro:include filename="$(find dash_description)/urdf/gazebo_control.xacro" />
+</xacro:unless>
+<xacro:include filename="lidar.xacro" />
+<!-- <xacro:include filename="camera.xacro" /> -->
+
+<link name="base_footprint" />
+
+<link name="base_link">
+  <inertial>
+    <origin xyz="-0.0001756398460748861 0.000785663967402036 0.02126605866131521" rpy="0 0 0"/>
+    <mass value="0.7651054600318724"/>
+    <inertia ixx="0.001117" iyy="0.001927" izz="0.003041" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="white"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="plate2_1">
+  <inertial>
+    <origin xyz="-0.042324639851253384 -0.0007853360266075202 0.02373405866131486" rpy="0 0 0"/>
+    <mass value="0.07847491696579713"/>
+    <inertia ixx="8.6e-05" iyy="8.6e-05" izz="0.000173" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.034649 -0.001571 -0.052532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/plate2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="white"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.034649 -0.001571 -0.052532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/plate2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="stanoff6_1">
+  <inertial>
+    <origin xyz="-0.039824639851252785 0.04671466397339212 0.04123405866131466" rpy="0 0 0"/>
+    <mass value="0.005514416758597401"/>
+    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.015351 -0.001571 -0.057532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="brass"/>
+  </visual>
+  <collision>
+    <origin xyz="0.015351 -0.001571 -0.057532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="stanoff4_1">
+  <inertial>
+    <origin xyz="0.05517536014874619 0.046714663973392044 0.041234058661314646" rpy="0 0 0"/>
+    <mass value="0.005514416758597401"/>
+    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.015351 -0.001571 -0.057532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff4_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="brass"/>
+  </visual>
+  <collision>
+    <origin xyz="0.015351 -0.001571 -0.057532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff4_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="stanoff5_1">
+  <inertial>
+    <origin xyz="-0.039824639851252855 -0.04828533602660699 0.041234058661314826" rpy="0 0 0"/>
+    <mass value="0.005514416758597401"/>
+    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.015351 -0.001571 -0.057532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff5_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="brass"/>
+  </visual>
+  <collision>
+    <origin xyz="0.015351 -0.001571 -0.057532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff5_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="stanoff3_1">
+  <inertial>
+    <origin xyz="0.05517536014874613 -0.04778533602660709 0.04123405866131481" rpy="0 0 0"/>
+    <mass value="0.005514416758597401"/>
+    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.015351 -0.001571 -0.057532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="brass"/>
+  </visual>
+  <collision>
+    <origin xyz="0.015351 -0.001571 -0.057532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="plate3_1">
+  <inertial>
+    <origin xyz="-0.04482463985125343 0.05121466397339254 0.023734058661314603" rpy="0 0 0"/>
+    <mass value="0.07847491696579713"/>
+    <inertia ixx="8.6e-05" iyy="8.6e-05" izz="0.000173" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.037149 0.049929 -0.097532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/plate3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="white"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.037149 0.049929 -0.097532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/plate3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Arduino_Uno_1">
+  <inertial>
+    <origin xyz="-0.0033625343501772096 -0.000629600930684629 -0.003181406256251282" rpy="0 0 0"/>
+    <mass value="0.10570138079004966"/>
+    <inertia ixx="3e-05" iyy="5.8e-05" izz="8.5e-05" ixy="-3e-06" iyz="-1e-06" ixz="-2e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.007676 -0.001286 -0.118766" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/Arduino_Uno_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="green"/>
+  </visual>
+  <!-- <collision>
+    <origin xyz="0.007676 -0.001286 -0.118766" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/Arduino_Uno_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision> -->
+</link>
+
+<link name="r_wheel_1">
+  <!-- <inertial>
+    <origin xyz="3.9932805875902587e-07 -0.018127426353005002 9.406102070147471e-08" rpy="0 0 0"/>
+    <mass value="0.1680179461347577"/>
+    <inertia ixx="6.8e-05" iyy="0.000114" izz="6.8e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial> -->
+  <xacro:inertial_cylinder mass="0.08" length="0.02" radius="0.033">
+      <origin xyz="9.6e-05 -0.018 0.0005" rpy="1.57080 0 0"/>
+  </xacro:inertial_cylinder>
+  <visual>
+    <origin xyz="9.6e-05 0.043134 -0.034881" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/r_wheel_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <collision>
+    <origin xyz="9.6e-05 -0.018 0.0005" rpy="1.57080 0 0"/>
+    <geometry>
+      <cylinder radius="0.033" length="0.02"/>
+    </geometry>
+    <!-- <surface>
+      <friction>
+        <ode>
+          <mu>1.0</mu>
+          <mu2>1.0</mu2>
+        </ode>
+      </friction>
+    </surface> -->
+  </collision>
+  <!-- <collision>
+    <origin xyz="9.6e-05 0.043134 -0.034881" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/r_wheel_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision> -->
+</link>
+
+<link name="l_wheel_1">
+  <!-- <inertial>
+    <origin xyz="3.2409641393168077e-07 0.01812675693954447 2.5152972871200774e-08" rpy="0 0 0"/>
+    <mass value="0.1680159925515549"/>
+    <inertia ixx="6.8e-05" iyy="0.000114" izz="6.8e-05" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial> -->
+  <xacro:inertial_cylinder mass="0.08" length="0.02" radius="0.033">
+      <origin xyz="9.6e-05 0.018 0.0005" rpy="1.5708 0 0"/>
+  </xacro:inertial_cylinder>
+  <visual>
+    <origin xyz="9.6e-05 -0.044706 -0.034819" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/l_wheel_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <collision>
+    <origin xyz="9.6e-05 0.018 0.0005" rpy="1.5708 0 0"/>
+    <geometry>
+      <cylinder radius="0.033" length="0.02"/>
+    </geometry>
+    <!-- <surface>
+      <friction>
+        <ode>
+          <mu>1.0</mu>
+          <mu2>1.0</mu2>
+        </ode>
+      </friction>
+    </surface> -->
+  </collision>
+  <!-- <collision>
+    <origin xyz="9.6e-05 -0.044706 -0.034819" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/l_wheel_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision> -->
+</link>
+
+<link name="motor_driver_1">
+  <inertial>
+    <origin xyz="-0.00031691728902943976 0.0032666103743481173 0.007013079191848889" rpy="0 0 0"/>
+    <mass value="0.0615628867501974"/>
+    <inertia ixx="1.2e-05" iyy="9e-06" izz="1.5e-05" ixy="-0.0" iyz="-2e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.000176 -0.000786 -0.023766" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/motor_driver_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="red"/>
+  </visual>
+  <!-- <collision>
+    <origin xyz="0.000176 -0.000786 -0.023766" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/motor_driver_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision> -->
+</link>
+
+<link name="Battery_1">
+  <inertial>
+    <origin xyz="0.01767536014874662 -0.0007853360266075724 0.011234058661314862" rpy="0 0 0"/>
+    <mass value="0.06793185382290062"/>
+    <inertia ixx="2.9e-05" iyy="1.8e-05" izz="4.2e-05" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.015351 -0.001571 -0.052532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/Battery_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <!-- <collision>
+    <origin xyz="0.015351 -0.001571 -0.052532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/Battery_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision> -->
+</link>
+
+<link name="Castor1_1">
+  <!-- <inertial>
+    <origin xyz="0.07017536014820341 -0.0007853360266077473 -0.026995000603408814" rpy="0 0 0"/>
+    <mass value="0.022564349826234332"/>
+    <inertia ixx="1e-06" iyy="1e-06" izz="1e-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial> -->
+  <xacro:inertial_sphere mass="0.08" radius="0.015">
+    <origin xyz="0.07 -0.0010 -0.02" rpy="0 0 0"/>
+  </xacro:inertial_sphere>
+  <visual>
+    <!-- <origin xyz="0.000351 -0.001571 -0.037532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/Castor1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry> -->
+    <origin xyz="0.07 -0.0010 -0.02" rpy="0 0 0"/>
+    <geometry>
+        <sphere radius="0.015"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.07 -0.0010 -0.02" rpy="0 0 0"/>
+    <geometry>
+        <sphere radius="0.015"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="raspberry_1">
+  <inertial>
+    <origin xyz="-0.014009181545472326 -0.0003223863089366019 0.0047651539263630915" rpy="0 0 0"/>
+    <mass value="0.14572614104695866"/>
+    <inertia ixx="4.1e-05" iyy="9.9e-05" izz="0.000134" ixy="4e-06" iyz="-1e-06" ixz="1e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.007676 -0.000786 -0.078766" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/raspberry_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="green"/>
+  </visual>
+  <!-- <collision>
+    <origin xyz="0.007676 -0.000786 -0.078766" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/raspberry_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision> -->
+</link>
+
+<link name="Castor1_2">
+  <!-- <inertial>
+    <origin xyz="-0.06982463985179659 -0.0007853360266076153 -0.026995000603408814" rpy="0 0 0"/>
+    <mass value="0.022564349826234332"/>
+    <inertia ixx="1e-06" iyy="1e-06" izz="1e-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial> -->
+  <xacro:inertial_sphere mass="0.08" radius="0.015">
+    <origin xyz="-0.07 -0.0010 -0.02" rpy="0 0 0"/>
+  </xacro:inertial_sphere>
+  <visual>
+    <!-- <origin xyz="0.000351 -0.001571 -0.037532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/Castor1_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry> -->
+    <origin xyz="-0.07 -0.0010 -0.02" rpy="0 0 0"/>
+    <geometry>
+        <sphere radius="0.015"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.07 -0.0010 -0.02" rpy="0 0 0"/>
+    <geometry>
+        <sphere radius="0.015"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="stanoff_1">
+  <inertial>
+    <origin xyz="0.04017536014874616 -0.0007853360266076349 0.006234058661315038" rpy="0 0 0"/>
+    <mass value="0.006893020948246756"/>
+    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.000351 -0.001571 -0.042532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="brass"/>
+  </visual>
+  <collision>
+    <origin xyz="0.000351 -0.001571 -0.042532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="stanoff2_1">
+  <inertial>
+    <origin xyz="-0.039824639851253035 -0.0007853360266075601 0.006234058661315038" rpy="0 0 0"/>
+    <mass value="0.006893020948246758"/>
+    <inertia ixx="1e-06" iyy="1e-06" izz="0.0" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.000351 -0.001571 -0.042532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="brass"/>
+  </visual>
+  <collision>
+    <origin xyz="0.000351 -0.001571 -0.042532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/stanoff2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Gearbox1_1">
+  <inertial>
+    <origin xyz="-0.01666389774208902 -0.036569105911463944 -0.007670103076730349" rpy="0 0 0"/>
+    <mass value="0.05595348801807254"/>
+    <inertia ixx="5e-06" iyy="2.4e-05" izz="2.4e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.000351 -0.001571 -0.042532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/Gearbox1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="yellow"/>
+  </visual>
+  <!-- <collision>
+    <origin xyz="-0.017 -0.037 -0.007" rpy="0 0 0"/>
+    <geometry>
+        <box size="0.065 0.02 0.025"/>
+    </geometry>
+  </collision> -->
+</link>
+
+<link name="Gearbox1_2">
+  <inertial>
+    <origin xyz="-0.016663897742087208 0.034998433858248704 -0.007693858442301756" rpy="0 0 0"/>
+    <mass value="0.05595348801807254"/>
+    <inertia ixx="5e-06" iyy="2.4e-05" izz="2.4e-05" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.000351 -0.001571 -0.042532" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find dash_description)/meshes/Gearbox1_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="yellow"/>
+  </visual>
+  <!-- <collision>
+    <origin xyz="-0.017 0.037 -0.007" rpy="0 0 0"/>
+    <geometry>
+        <box size="0.065 0.02 0.025"/>
+    </geometry>
+  </collision> -->
+</link>
+
+<joint name="base_joint" type="fixed">
+    <parent link="base_footprint" />
+    <child link="base_link" />
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+<joint name="Rigid_3" type="fixed">
+  <origin xyz="0.035 0.0 0.01" rpy="0 0 0"/>
+  <parent link="stanoff_1"/>
+  <child link="plate2_1"/>
+</joint>
+
+<joint name="Rigid_4" type="fixed">
+  <origin xyz="-0.05 0.0 0.005" rpy="0 0 0"/>
+  <parent link="plate2_1"/>
+  <child link="stanoff6_1"/>
+</joint>
+
+<joint name="Rigid_5" type="fixed">
+  <origin xyz="-0.05 0.0 0.005" rpy="0 0 0"/>
+  <parent link="plate2_1"/>
+  <child link="stanoff4_1"/>
+</joint>
+
+<joint name="Rigid 6" type="fixed">
+  <origin xyz="-0.05 0.0 0.005" rpy="0 0 0"/>
+  <parent link="plate2_1"/>
+  <child link="stanoff5_1"/>
+</joint>
+
+<joint name="Rigid_7" type="fixed">
+  <origin xyz="-0.05 0.0 0.005" rpy="0 0 0"/>
+  <parent link="plate2_1"/>
+  <child link="stanoff3_1"/>
+</joint>
+
+<joint name="Rigid_8" type="fixed">
+  <origin xyz="0.0525 -0.0515 0.04" rpy="0 0 0"/>
+  <parent link="stanoff3_1"/>
+  <child link="plate3_1"/>
+</joint>
+
+<joint name="Rigid_10" type="fixed">
+  <origin xyz="-0.044825 0.051215 0.021234" rpy="0 0 0"/>
+  <parent link="plate3_1"/>
+  <child link="Arduino_Uno_1"/>
+</joint>
+
+<joint name="rw_joint" type="continuous">
+  <origin xyz="0.000255 -0.044705 -0.007651" rpy="0 0 0"/>
+  <parent link="Gearbox1_1"/>
+  <child link="r_wheel_1"/>
+  <axis xyz="-0.0 1.0 0.0"/>
+  <dynamics damping="0.2"/>
+</joint>
+
+<joint name="lw_joint" type="continuous">
+  <origin xyz="0.000255 0.043135 -0.007713" rpy="0 0 0"/>
+  <parent link="Gearbox1_2"/>
+  <child link="l_wheel_1"/>
+  <axis xyz="0.0 1.0 -0.0"/>
+  <dynamics damping="0.2"/>
+</joint>
+
+<joint name="Rigid_18" type="fixed">
+  <origin xyz="-0.000176 0.000786 0.023766" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="motor_driver_1"/>
+</joint>
+
+<joint name="Rigid_20" type="fixed">
+  <origin xyz="-0.05 0.0 0.0" rpy="0 0 0"/>
+  <parent link="plate2_1"/>
+  <child link="Battery_1"/>
+</joint>
+
+<joint name="Rigid_21" type="fixed">
+  <origin xyz="-0.000351 0.001571 0.037532" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Castor1_1"/>
+</joint>
+
+<joint name="Rigid_22" type="fixed">
+  <origin xyz="-0.042325 -0.000785 0.026234" rpy="0 0 0"/>
+  <parent link="plate2_1"/>
+  <child link="raspberry_1"/>
+</joint>
+
+<joint name="Rigid_24" type="fixed">
+  <origin xyz="-0.000351 0.001571 0.037532" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Castor1_2"/>
+</joint>
+
+<joint name="Rigid_25" type="fixed">
+  <origin xyz="-0.000351 0.001571 0.042532" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="stanoff_1"/>
+</joint>
+
+<joint name="Rigid_26" type="fixed">
+  <origin xyz="-0.000351 0.001571 0.042532" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="stanoff2_1"/>
+</joint>
+
+<joint name="Rigid_27" type="fixed">
+  <origin xyz="-0.000351 0.001571 0.042532" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Gearbox1_1"/>
+</joint>
+
+<joint name="Rigid_28" type="fixed">
+  <origin xyz="-0.000351 0.001571 0.042532" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Gearbox1_2"/>
+</joint>
+
+</robot>
