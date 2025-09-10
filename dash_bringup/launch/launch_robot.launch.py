@@ -125,7 +125,7 @@ def generate_launch_description():
         launch_arguments={
             "serial_port": "/dev/ttyUSB0",
             "frame_id": "laser_frame",
-            "inverted": "true",
+            "inverted": "false",
             "angle_compensate": "true",
             "scan_mode": "Standard"
         }.items(),
