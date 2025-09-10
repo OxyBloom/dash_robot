@@ -57,8 +57,18 @@
   }
 #elif defined L298_MOTOR_DRIVER
   void initMotorController() {
-    digitalWrite(RIGHT_MOTOR_ENABLE, HIGH);
+    pinMode(LEFT_MOTOR_FORWARD, OUTPUT);
+    pinMode(LEFT_MOTOR_BACKWARD, OUTPUT);
+    pinMode(RIGHT_MOTOR_FORWARD, OUTPUT);
+    pinMode(RIGHT_MOTOR_BACKWARD, OUTPUT);
+    pinMode(LEFT_MOTOR_ENABLE, OUTPUT);
+    pinMode(RIGHT_MOTOR_ENABLE, OUTPUT);
     digitalWrite(LEFT_MOTOR_ENABLE, HIGH);
+    digitalWrite(RIGHT_MOTOR_ENABLE, HIGH);
+    analogWrite(LEFT_MOTOR_FORWARD, 0);
+    analogWrite(LEFT_MOTOR_BACKWARD, 0);
+    analogWrite(RIGHT_MOTOR_FORWARD, 0);
+    analogWrite(RIGHT_MOTOR_BACKWARD, 0);
   }
   
   void setMotorSpeed(int i, int spd) {

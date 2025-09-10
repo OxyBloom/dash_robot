@@ -22,6 +22,7 @@ def generate_launch_description():
     robot_name = LaunchConfiguration('robot_name')
     world = LaunchConfiguration('world')
     use_joystick = LaunchConfiguration('use_joystick')
+    use_lidar = LaunchConfiguration('lidar')
 
     # Declare launch arguments
     use_sim_time_arg = DeclareLaunchArgument(
@@ -47,10 +48,10 @@ def generate_launch_description():
       description='Whether to use joystick control'
     )
 
-    # declare_robot_name_cmd = DeclareLaunchArgument(
-    #   name='world',
-    #   default_value='dash',
-    #   description='name of the robot')
+    declare_lidar_cmd = DeclareLaunchArgument(
+      name='lidar',
+      default_value='true',
+      description='run lidar')
 
     package_name='dash_description'
 
@@ -123,11 +124,12 @@ def generate_launch_description():
         ),
         launch_arguments={
             "serial_port": "/dev/ttyUSB0",
-            "frame_id": "laser_link",
+            "frame_id": "laser_frame",
             "inverted": "true",
             "angle_compensate": "true",
             "scan_mode": "Standard"
         }.items(),
+        condition=IfCondition(use_lidar)
     )
     
 
@@ -156,11 +158,14 @@ def generate_launch_description():
     #odom
 
     laser_odom = IncludeLaunchDescription(
-        os.path.join(
-            get_package_share_directory("rf2o_laser_odometry"),
-            "launch",
-            "rf2o_laser_odometry.launch.py"
+        PythonLaunchDescriptionSource(
+                os.path.join(
+                get_package_share_directory("rf2o_laser_odometry"),
+                "launch",
+                "rf2o_laser_odometry.launch.py"
+            )
         ),
+        condition=IfCondition(use_lidar)   
     )
     
     nodes = [
@@ -176,13 +181,14 @@ def generate_launch_description():
         declare_robot_name_cmd,
         use_sim_time_arg,
         use_ros2_control_arg,
+        declare_lidar_cmd,
         controller_node,
         robot_state_publisher_node,
         joint_state_broadcaster_spawner,
         # delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
         start_dash_diff_drive_controller_spawner_after_joint_state_broadcaster_spawner,
-        # laser_interface,
+        laser_interface,
         twist_mux,
         joystick,
-        # laser_odom,
+        laser_odom,
     ])

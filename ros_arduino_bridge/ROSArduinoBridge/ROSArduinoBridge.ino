@@ -45,6 +45,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
+// python -m serial.tools.miniterm -e /dev/ttyACM0 57600
 #define USE_BASE      // Enable the base controller code
 //#undef USE_BASE     // Disable the base controller code
 #undef USE_ENCODERS   // ADD THIS LINE - Completely disable encoders
