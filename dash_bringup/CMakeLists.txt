@@ -7,6 +7,10 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -19,7 +23,15 @@ endif()
 install(DIRECTORY
     launch
     rviz
+    scripts
     DESTINATION share/${PROJECT_NAME}/
 )
+
+install(PROGRAMS
+  scripts/virtual_wheel_states.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+ament_export_dependencies(ament_cmake_python)
 
 ament_package()

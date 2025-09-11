@@ -167,15 +167,19 @@ def generate_launch_description():
         ),
         condition=IfCondition(use_lidar)   
     )
-    
-    nodes = [
-        controller_node,
-        robot_state_publisher_node,
-        joint_state_broadcaster_spawner,
-        # delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
-    ]
 
-    # Launch them all!
+    # Add in your launch_robot.launch.py
+    wheel = Node(
+    package='dash_bringup',
+    executable='virtual_wheel_states.py',
+    name='virtual_wheel_states',
+    parameters=[{
+        'wheel_radius': 0.033,
+        'wheel_separation': 0.287,
+        'use_odom': True
+    }]
+    )
+    
     return LaunchDescription([
         declare_use_joystick_cmd,
         declare_robot_name_cmd,
@@ -191,4 +195,5 @@ def generate_launch_description():
         twist_mux,
         joystick,
         laser_odom,
+        wheel
     ])
